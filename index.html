@@ -1,1 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Secure online banking demo"
+    >
+
+    <title>Online Banking</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+
+<!-- =========================================================
+     APP
+========================================================= -->
+
+<div id="app">
+
+    <!-- =====================================================
+         AUTHENTICATION SCREEN
+    ====================================================== -->
+
+    <section
+        id="authScreen"
+        class="auth-screen"
+    >
+
+        <div class="auth-card">
+
+            <!-- BRAND -->
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    OB
+                </div>
+
+                <div>
+                    <h1>Online Banking</h1>
+
+                    <p>
+                        Secure digital banking
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 LOGIN
+            ================================================== -->
+
+            <div
+                id="loginPanel"
+                class="auth-panel"
+            >
+
+                <div class="panel-heading">
+
+                    <h2>Welcome back</h2>
+
+                    <p>
+                        Sign in to access your account
+                    </p>
+
+                </div>
+
+
+                <form id="loginForm">
+
+                    <label for="loginEmail">
+                        Email address
+                    </label>
+
+                    <input
+                        id="loginEmail"
+                        type="email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        id="loginPassword"
+                        type="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Sign in
+                    </button>
+
+                </form>
+
+
+                <div
+                    id="loginMessage"
+                    class="message"
+                ></div>
+
+
+                <p class="switch-text">
+
+                    Don't have an account?
+
+                    <button
+                        type="button"
+                        class="text-button"
+                        id="showRegisterButton"
+                    >
+                        Create one
+                    </button>
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 REGISTER
+            ================================================== -->
+
+            <div
+                id="registerPanel"
+                class="auth-panel hidden"
+            >
+
+                <div class="panel-heading">
+
+                    <h2>Create your account</h2>
+
+                    <p>
+                        Register for your online banking demo
+                    </p>
+
+                </div>
+
+
+                <form id="registerForm">
+
+                    <label for="registerName">
+                        Full name
+                    </label>
+
+                    <input
+                        id="registerName"
+                        type="text"
+                        placeholder="Your full name"
+                        autocomplete="name"
+                        minlength="2"
+                        maxlength="120"
+                        required
+                    >
+
+
+                    <label for="registerEmail">
+                        Email address
+                    </label>
+
+                    <input
+                        id="registerEmail"
+                        type="email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+
+                    <label for="registerPassword">
+                        Password
+                    </label>
+
+                    <input
+                        id="registerPassword"
+                        type="password"
+                        placeholder="At least 8 characters"
+                        autocomplete="new-password"
+                        minlength="8"
+                        maxlength="128"
+                        required
+                    >
+
+
+                    <label for="registerPasswordConfirm">
+                        Confirm password
+                    </label>
+
+                    <input
+                        id="registerPasswordConfirm"
+                        type="password"
+                        placeholder="Repeat your password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        maxlength="128"
+                        required
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Create account
+                    </button>
+
+                </form>
+
+
+                <div
+                    id="registerMessage"
+                    class="message"
+                ></div>
+
+
+                <p class="switch-text">
+
+                    Already have an account?
+
+                    <button
+                        type="button"
+                        class="text-button"
+                        id="showLoginButton"
+                    >
+                        Sign in
+                    </button>
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 OTP VERIFICATION
+            ================================================== -->
+
+            <div
+                id="otpPanel"
+                class="auth-panel hidden"
+            >
+
+                <div class="otp-icon">
+                    ✉
+                </div>
+
+                <div class="panel-heading">
+
+                    <h2>Verify your email</h2>
+
+                    <p>
+                        Enter the 6-digit verification code
+                        sent to your email.
+                    </p>
+
+                </div>
+
+
+                <form id="otpForm">
+
+                    <label for="otpEmail">
+                        Email address
+                    </label>
+
+                    <input
+                        id="otpEmail"
+                        type="email"
+                        readonly
+                    >
+
+
+                    <label for="otpCode">
+                        Verification code
+                    </label>
+
+                    <input
+                        id="otpCode"
+                        type="text"
+                        inputmode="numeric"
+                        pattern="[0-9]{6}"
+                        maxlength="6"
+                        placeholder="000000"
+                        autocomplete="one-time-code"
+                        required
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Verify account
+                    </button>
+
+                </form>
+
+
+                <div
+                    id="otpMessage"
+                    class="message"
+                ></div>
+
+
+                <button
+                    type="button"
+                    class="text-button back-button"
+                    id="backToLoginButton"
+                >
+                    Back to sign in
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
+
+    <section
+        id="dashboardScreen"
+        class="dashboard-screen hidden"
+    >
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside
+            id="sidebar"
+            class="sidebar"
+        >
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    OB
+                </div>
+
+                <div>
+                    <strong>Online Banking</strong>
+                    <span>Secure Banking</span>
+                </div>
+
+            </div>
+
+
+            <nav class="navigation">
+
+                <button
+                    class="nav-item active"
+                    data-section="overviewSection"
+                >
+                    <span>⌂</span>
+                    Overview
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="transactionsSection"
+                >
+                    <span>↔</span>
+                    Transactions
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="transferSection"
+                >
+                    <span>➜</span>
+                    Transfer
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-section="settingsSection"
+                >
+                    <span>⚙</span>
+                    Settings
+                </button>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <button
+                    id="logoutButton"
+                    class="logout-button"
+                >
+                    <span>↪</span>
+                    Sign out
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             MAIN CONTENT
+        ================================================== -->
+
+        <main class="main-content">
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <button
+                    id="mobileMenuButton"
+                    class="mobile-menu-button"
+                    type="button"
+                    aria-label="Open menu"
+                >
+                    ☰
+                </button>
+
+
+                <div>
+
+                    <p class="topbar-label">
+                        Personal Banking
+                    </p>
+
+                    <h2 id="pageTitle">
+                        Overview
+                    </h2>
+
+                </div>
+
+
+                <div class="profile-area">
+
+                    <div class="profile-avatar">
+                        <span id="profileInitial">
+                            U
+                        </span>
+                    </div>
+
+                    <div class="profile-info">
+
+                        <strong id="profileName">
+                            User
+                        </strong>
+
+                        <span id="profileEmail">
+                            user@example.com
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 OVERVIEW
+            ================================================== -->
+
+            <section
+                id="overviewSection"
+                class="content-section"
+            >
+
+                <div class="welcome-area">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            ACCOUNT OVERVIEW
+                        </p>
+
+                        <h1>
+                            Welcome,
+                            <span id="welcomeName">
+                                Customer
+                            </span>
+                        </h1>
+
+                        <p>
+                            Here's what's happening with
+                            your account.
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="primary-button small"
+                        data-open-section="transferSection"
+                    >
+                        Make a transfer
+                    </button>
+
+                </div>
+
+
+                <!-- BALANCE CARD -->
+
+                <div class="balance-card">
+
+                    <div class="balance-top">
+
+                        <div>
+
+                            <span class="balance-label">
+                                Available balance
+                            </span>
+
+                            <div
+                                id="balanceAmount"
+                                class="balance-amount"
+                            >
+                                $0.00
+                            </div>
+
+                        </div>
+
+                        <div class="balance-symbol">
+                            $
+                        </div>
+
+                    </div>
+
+
+                    <div class="account-details">
+
+                        <div>
+
+                            <span>
+                                Account number
+                            </span>
+
+                            <strong id="accountNumber">
+                                —
+                            </strong>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Currency
+                            </span>
+
+                            <strong id="accountCurrency">
+                                USD
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <h3>
+                            Quick actions
+                        </h3>
+
+                        <p>
+                            Common account actions
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <button
+                        class="action-card"
+                        data-open-section="transferSection"
+                    >
+
+                        <div class="action-icon">
+                            →
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Transfer money
+                            </strong>
+
+                            <span>
+                                Send money to another account
+                            </span>
+
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        data-open-section="transactionsSection"
+                    >
+
+                        <div class="action-icon">
+                            ↕
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                View transactions
+                            </strong>
+
+                            <span>
+                                See your recent activity
+                            </span>
+
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="action-card"
+                        data-open-section="settingsSection"
+                    >
+
+                        <div class="action-icon">
+                            ⚙
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Account settings
+                            </strong>
+
+                            <span>
+                                Manage your account
+                            </span>
+
+                        </div>
+
+                    </button>
+
+                </div>
+
+
+                <!-- RECENT TRANSACTIONS -->
+
+                <div class="section-heading transaction-heading">
+
+                    <div>
+
+                        <h3>
+                            Recent transactions
+                        </h3>
+
+                        <p>
+                            Your latest account activity
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="text-button"
+                        data-open-section="transactionsSection"
+                    >
+                        View all
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="recentTransactions"
+                    class="transaction-list"
+                >
+
+                    <div class="empty-state">
+                        No transactions yet.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 TRANSACTIONS
+            ================================================== -->
+
+            <section
+                id="transactionsSection"
+                class="content-section hidden"
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            ACCOUNT ACTIVITY
+                        </p>
+
+                        <h1>
+                            Transactions
+                        </h1>
+
+                        <p>
+                            Review your recent account activity.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="allTransactions"
+                    class="transaction-list large"
+                >
+
+                    <div class="empty-state">
+                        No transactions yet.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 TRANSFER
+            ================================================== -->
+
+            <section
+                id="transferSection"
+                class="content-section hidden"
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            PAYMENTS
+                        </p>
+
+                        <h1>
+                            Transfer money
+                        </h1>
+
+                        <p>
+                            Send funds to another account
+                            within this demo.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="transfer-layout">
+
+                    <div class="form-card">
+
+                        <form id="transferForm">
+
+                            <label for="recipientAccount">
+                                Recipient account number
+                            </label>
+
+                            <input
+                                id="recipientAccount"
+                                type="text"
+                                placeholder="Enter account number"
+                                maxlength="24"
+                                required
+                            >
+
+
+                            <label for="transferAmount">
+                                Amount
+                            </label>
+
+                            <div class="amount-input">
+
+                                <span>$</span>
+
+                                <input
+                                    id="transferAmount"
+                                    type="number"
+                                    min="0.01"
+                                    step="0.01"
+                                    placeholder="0.00"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <label for="transferDescription">
+                                Description
+                            </label>
+
+                            <input
+                                id="transferDescription"
+                                type="text"
+                                maxlength="200"
+                                placeholder="What is this transfer for?"
+                            >
+
+
+                            <button
+                                type="submit"
+                                class="primary-button"
+                            >
+                                Send transfer
+                            </button>
+
+                        </form>
+
+
+                        <div
+                            id="transferMessage"
+                            class="message"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="info-card">
+
+                        <div class="info-icon">
+                            ✓
+                        </div>
+
+                        <h3>
+                            Demo transfer
+                        </h3>
+
+                        <p>
+                            Transfers on this application
+                            operate only within the demo
+                            database. They do not move real
+                            bank funds.
+                        </p>
+
+                        <div class="info-row">
+
+                            <span>
+                                Available balance
+                            </span>
+
+                            <strong id="transferBalance">
+                                $0.00
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SETTINGS
+            ================================================== -->
+
+            <section
+                id="settingsSection"
+                class="content-section hidden"
+            >
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            ACCOUNT
+                        </p>
+
+                        <h1>
+                            Settings
+                        </h1>
+
+                        <p>
+                            Review your account information.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="settings-grid">
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Personal information
+                            </h3>
+
+                            <p>
+                                Full name
+                            </p>
+
+                            <strong id="settingsName">
+                                —
+                            </strong>
+
+                            <p>
+                                Email
+                            </p>
+
+                            <strong id="settingsEmail">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            #
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Account information
+                            </h3>
+
+                            <p>
+                                Account number
+                            </p>
+
+                            <strong id="settingsAccount">
+                                —
+                            </strong>
+
+                            <p>
+                                Account status
+                            </p>
+
+                            <strong class="status-active">
+                                Active
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Verification
+                            </h3>
+
+                            <p>
+                                Email verification
+                            </p>
+
+                            <strong
+                                id="settingsVerification"
+                                class="status-active"
+                            >
+                                Verified
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     LOADING OVERLAY
+========================================================= -->
+
+<div
+    id="loadingOverlay"
+    class="loading-overlay hidden"
+>
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <p id="loadingText">
+            Please wait...
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="/static/app.js"></script>
+
+</body>
+</html>
