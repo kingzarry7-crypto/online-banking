@@ -1,119 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+const nav = [['⌂','Overview','/dashboard'],['⇄','Transfers','/dashboard/transfer'],['▤','Transactions','/dashboard/transactions'],['▣','Cards','/dashboard/cards'],['◈','Investments','/dashboard/investments'],['◌','Loans','/dashboard/loans'],['⚙','Settings','/dashboard/settings']];
+const activity = [['Salary deposit','Income','+$0.00','Today, 09:24','green'],['Virtual card payment','Shopping','-$0.00','Yesterday, 17:48','blue'],['Investment contribution','Investment','-$0.00','Sep 14, 10:12','blue']];
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(null);
   const [greeting, setGreeting] = useState('Good morning');
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour >= 12 && hour < 17) setGreeting('Good afternoon');
-    else if (hour >= 17) setGreeting('Good evening');
-
-    setUser({
-      fullName: 'Demo User',
-      accountNumber: '1234567890',
-      balance: 0,
-    });
-  }, []);
-
-  if (!user) {
-    return (
-      <main className="min-h-screen bg-gradient-to-b from-primary-50 to-white flex items-center justify-center">
-        <p className="text-gray-600">Loading...</p>
-      </main>
-    );
-  }
-
-  return (
-    <main className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
-      <TopNav />
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <h1 className="text-2xl font-bold text-primary-900 mb-6">
-          {greeting}, {user.fullName.split(' ')[0]}
-        </h1>
-
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <SummaryCard title="Account number" value={user.accountNumber ?? 'Not assigned'} />
-          <SummaryCard title="Balance" value={`$${Number(user.balance ?? 0).toFixed(2)}`} />
-          <SummaryCard title="Status" value="Active" />
-        </div>
-
-        <section className="mb-8">
-          <h2 className="text-lg font-semibold text-primary-900 mb-4">Quick actions</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <ActionCard title="Transfer" href="/dashboard/transfer" />
-            <ActionCard title="Transactions" href="/dashboard/transactions" />
-            <ActionCard title="Cards" href="/dashboard/cards" />
-            <ActionCard title="Investments" href="/dashboard/investments" />
-            <ActionCard title="Loans" href="/dashboard/loans" />
-            <ActionCard title="Settings" href="/dashboard/settings" />
-          </div>
-        </section>
-
-        <SupportFooter />
-      </div>
-    </main>
-  );
+  useEffect(() => { const h = new Date().getHours(); setGreeting(h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'); }, []);
+  return <main className="gtb-shell"><div className="flex min-h-screen"><aside className="gtb-desktop-sidebar w-72 shrink-0 bg-[#071b3a] px-5 py-7 text-white"><Brand /><div className="mt-10 space-y-2">{nav.map(([icon,label,href], i) => <Link key={label} href={href} className={`gtb-sidebar-link ${i === 0 ? 'active' : ''}`}><span className="w-5 text-center">{icon}</span>{label}</Link>)}</div><div className="mt-14 rounded-2xl border border-white/10 bg-white/5 p-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-emerald-300">Demo account</p><p className="mt-2 text-xs leading-5 text-blue-100">Transactions in this sandbox never move real money.</p></div><a href="mailto:bankm3857@gmail.com" className="mt-6 block text-center text-xs font-semibold text-blue-200 hover:text-white">Contact support</a></aside><section className="min-w-0 flex-1"><header className="flex items-center justify-between border-b border-[#e6ebf2] bg-white px-5 py-4 sm:px-8"><div className="md:hidden"><Brand dark /></div><div className="ml-auto flex items-center gap-3"><button className="grid h-10 w-10 place-items-center rounded-full bg-[#f5f8fc] text-[#61708a]">⌕</button><button className="grid h-10 w-10 place-items-center rounded-full bg-[#f5f8fc] text-[#61708a]">♧</button><div className="grid h-10 w-10 place-items-center rounded-full bg-[#0b5fff] text-sm font-black text-white">DU</div></div></header><div className="mx-auto max-w-7xl p-5 sm:p-8"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-sm font-medium text-[#61708a]">Wednesday, September 17</p><h1 className="mt-1 text-3xl font-black text-[#071b3a]">{greeting}, Demo User</h1><p className="mt-1 text-sm text-[#61708a]">Here is your financial overview.</p></div><span className="gtb-badge gtb-badge-green">● Account active</span></div><section className="mt-7 overflow-hidden rounded-3xl bg-gradient-to-br from-[#0b5fff] via-[#084fcf] to-[#071b3a] p-6 text-white shadow-xl shadow-blue-950/20 sm:p-8"><div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-sm text-blue-100">Total available balance</p><p className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">$0.00</p><p className="mt-5 text-sm text-blue-100">Everyday Checking · •••• 4829</p></div><div className="rounded-2xl border border-white/20 bg-white/10 px-5 py-4 backdrop-blur"><p className="text-xs uppercase tracking-[.14em] text-blue-100">Account number</p><p className="mt-2 font-mono text-lg font-bold">1234567890</p><button className="mt-3 text-xs font-bold text-emerald-200">Copy number</button></div></div><div className="mt-8 grid gap-3 sm:grid-cols-4">{[['↗','Send money'],['↓','Receive'],['▣','My cards'],['◌','Pay bills']].map(([icon,label]) => <Link href={label === 'Send money' ? '/dashboard/transfer' : '/dashboard'} key={label} className="rounded-2xl border border-white/15 bg-white/10 p-4 text-sm font-bold backdrop-blur hover:bg-white/20"><span className="mr-2 text-emerald-200">{icon}</span>{label}</Link>)}</div></section><section className="mt-7 grid gap-7 xl:grid-cols-[1.45fr_.8fr]"><article className="gtb-card p-6"><div className="flex items-center justify-between"><div><h2 className="text-lg font-black text-[#071b3a]">Recent activity</h2><p className="mt-1 text-sm text-[#61708a]">Your latest simulated transactions</p></div><Link href="/dashboard/transactions" className="text-sm font-bold text-[#0b5fff]">View all</Link></div><div className="mt-5 divide-y divide-[#e6ebf2]">{activity.map(([title,type,amount,date,tone]) => <div key={title} className="flex items-center gap-4 py-4"><span className={`grid h-11 w-11 place-items-center rounded-xl ${tone === 'green' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-[#0b5fff]'}`}>{tone === 'green' ? '↓' : '↗'}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-bold text-[#10233f]">{title}</p><p className="mt-1 text-xs text-[#61708a]">{type} · {date}</p></div><p className={tone === 'green' ? 'font-bold text-emerald-600' : 'font-bold text-[#10233f]'}>{amount}</p></div>)}</div></article><aside className="space-y-5"><article className="gtb-card p-6"><p className="text-sm font-bold text-[#071b3a]">Financial wellness</p><div className="mt-5 h-2 overflow-hidden rounded-full bg-[#eaf1ff]"><div className="h-full w-[68%] rounded-full bg-emerald-500" /></div><p className="mt-3 text-sm font-bold text-[#10233f]">You&apos;re building great habits</p><p className="mt-1 text-xs leading-5 text-[#61708a]">Explore budgeting and savings tools in this demo dashboard.</p></article><article className="rounded-3xl bg-[#071b3a] p-6 text-white"><p className="text-sm font-bold">Need help?</p><p className="mt-2 text-sm leading-6 text-blue-100">Our demo support team is ready to assist you.</p><a href="mailto:bankm3857@gmail.com" className="mt-5 inline-block text-sm font-bold text-emerald-300">Contact support →</a></article></aside></section></div></section></div></main>;
 }
 
-function TopNav() {
-  return (
-    <nav className="border-b border-gray-200 bg-white">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/dashboard" className="text-lg font-bold text-primary-900">
-          Online Banking
-        </Link>
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-sm text-gray-700 hover:text-primary-700">
-            Dashboard
-          </Link>
-          <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-primary-700">
-            Sign out
-          </Link>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-function SummaryCard({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="p-5 rounded-xl border border-gray-200 bg-white shadow-sm">
-      <div className="text-sm text-gray-600 mb-1">{title}</div>
-      <div className="text-xl font-semibold text-primary-900">{value}</div>
-    </div>
-  );
-}
-
-function ActionCard({ title, href }: { title: string; href: string }) {
-  return (
-    <Link
-      href={href}
-      className="p-5 rounded-xl border border-gray-200 bg-white shadow-sm hover:border-primary-300 hover:shadow"
-    >
-      <div className="text-primary-700 font-medium">{title}</div>
-    </Link>
-  );
-}
-
-function SupportFooter() {
-  return (
-    <section className="mt-12 rounded-xl border border-gray-200 bg-white p-6">
-      <h3 className="text-lg font-semibold text-primary-900 mb-2">Contact support</h3>
-      <p className="text-gray-600 mb-4">
-        Need help? Email us at:{' '}
-        <a href="mailto:bankm3857@gmail.com" className="text-primary-700 font-medium hover:underline">
-          bankm3857@gmail.com
-        </a>
-      </p>
-      <p className="text-xs text-gray-500">
-        This is a demo environment. No real money or bank connections.
-      </p>
-    </section>
-  );
-}
+function Brand({ dark = false }: { dark?: boolean }) { return <Link href="/" className={`flex items-center gap-3 no-underline ${dark ? 'text-[#071b3a]' : 'text-white'}`}><span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-400 font-black text-[#071b3a]">GT</span><span><strong className="block text-sm tracking-wide">GLOBAL TRUST</strong><span className={`text-[10px] tracking-[.22em] ${dark ? 'text-[#61708a]' : 'text-blue-100'}`}>BANK</span></span></Link>; }

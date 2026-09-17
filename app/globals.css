@@ -3,17 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
+  --navy: #071b3a;
+  --blue: #0b5fff;
+  --green: #17a673;
+  --ink: #10233f;
+  --muted: #61708a;
+  --line: #e6ebf2;
+  --surface: #f5f8fc;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+* { box-sizing: border-box; }
+html { background: var(--surface); }
+body { margin: 0; color: var(--ink); background: var(--surface); }
+button, input { font: inherit; }
+
+.gtb-shell { min-height: 100vh; background: #f5f8fc; }
+.gtb-nav { background: #071b3a; color: white; }
+.gtb-card { background: white; border: 1px solid #e6ebf2; border-radius: 20px; box-shadow: 0 12px 34px rgba(23, 46, 84, .06); }
+.gtb-input { width: 100%; margin-top: 7px; border: 1px solid #d6deea; border-radius: 12px; padding: 12px 14px; outline: none; color: #10233f; background: #fff; }
+.gtb-input:focus { border-color: #0b5fff; box-shadow: 0 0 0 4px rgba(11, 95, 255, .12); }
+.gtb-btn-primary { display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 12px; background: #0b5fff; color: white; padding: 12px 18px; font-weight: 700; cursor: pointer; transition: .2s; }
+.gtb-btn-primary:hover { background: #084cc9; transform: translateY(-1px); }
+.gtb-btn-secondary { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #d6deea; border-radius: 12px; background: white; color: #10233f; padding: 12px 18px; font-weight: 700; cursor: pointer; }
+.gtb-btn-secondary:hover { border-color: #0b5fff; color: #0b5fff; }
+.gtb-sidebar-link { display: flex; align-items: center; gap: 11px; border-radius: 12px; color: #9db0ce; padding: 12px 14px; font-size: 14px; font-weight: 600; text-decoration: none; }
+.gtb-sidebar-link:hover, .gtb-sidebar-link.active { background: rgba(255,255,255,.10); color: white; }
+.gtb-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 700; }
+.gtb-badge-green { background: #e6f8f0; color: #087a51; }
+.gtb-badge-blue { background: #eaf1ff; color: #0b5fff; }
+@media (max-width: 768px) {
+  .gtb-desktop-sidebar { display: none; }
 }
