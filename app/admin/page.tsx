@@ -1,106 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
+type User = { id: string; fullName: string; email: string; ssnOrNin: string; status: string; accountNumber?: string; balance: number; createdAt: string };
 export default function AdminPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsAdmin(true);
-      setLoading(false);
-    }, 400);
-  }, []);
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-gradient-to-b from-primary-50 to-white flex items-center justify-center">
-        <p className="text-gray-600">Loading admin dashboard...</p>
-      </main>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <main className="min-h-screen bg-gradient-to-b from-primary-50 to-white flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Access denied. Admin only.</p>
-          <Link href="/auth/signin" className="text-primary-700 hover:underline">
-            Go to sign in
-          </Link>
-        </div>
-      </main>
-    );
-  }
-
-  return (
-    <main className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
-      <AdminTopNav />
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <h1 className="text-2xl font-bold text-primary-900 mb-6">Admin Dashboard</h1>
-
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <StatCard label="Total users" value="1" />
-          <StatCard label="Pending approvals" value="0" />
-          <StatCard label="Total balance (demo)" value="$0.00" />
-        </div>
-
-        <section className="rounded-xl border border-gray-200 bg-white p-6">
-          <h2 className="text-lg font-semibold text-primary-900 mb-4">User management</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Approve, restrict, block, delete users and top up balances.
-          </p>
-          <div className="text-sm text-gray-500">
-            User list and actions will be wired to the backend API.
-          </div>
-        </section>
-
-        <section className="mt-8 rounded-xl border border-gray-200 bg-white p-6">
-          <h3 className="text-lg font-semibold text-primary-900 mb-2">Environment setup</h3>
-          <p className="text-sm text-gray-600">
-            Configure admin credentials and database in Vercel environment variables.
-          </p>
-          <ul className="mt-3 text-sm text-gray-700 list-disc pl-5 space-y-1">
-            <li>DATABASE_URL</li>
-            <li>ADMIN_EMAIL</li>
-            <li>ADMIN_PASSWORD</li>
-            <li>JWT_SECRET</li>
-          </ul>
-        </section>
-      </div>
-    </main>
-  );
+  const [users, setUsers] = useState<User[]>([]); const [loading, setLoading] = useState(true); const [message, setMessage] = useState(''); const [amounts, setAmounts] = useState<Record<string,string>>({});
+  async function load() { setLoading(true); const r = await fetch('/api/admin/users'); const d = await r.json(); if (r.ok) setUsers(d.users); else setMessage(d.error || 'Could not load users'); setLoading(false); }
+  useEffect(() => { load(); }, []);
+  async function action(userId: string, action: 'approve' | 'restrict' | 'block' | 'delete' | 'topup') { const body: any = { userId, action }; if (action === 'topup') body.amount = amounts[userId]; const r = await fetch('/api/admin/users', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }); const d = await r.json(); setMessage(r.ok ? `Account action completed: ${action}.` : d.error || 'Action failed'); if (r.ok) load(); }
+  async function signOut() { await fetch('/api/auth/signout', { method: 'POST' }); location.href = '/'; }
+  const total = users.reduce((sum, u) => sum + u.balance, 0); const pending = users.filter(u => u.status === 'PENDING').length;
+  return <main className="min-h-screen bg-[#f5f8fc]"><header className="bg-[#071b3a] px-6 py-5 text-white"><div className="mx-auto flex max-w-7xl items-center justify-between"><Link href="/" className="flex items-center gap-3 text-white no-underline"><span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-400 font-black text-[#071b3a]">GT</span><span><strong className="block text-sm tracking-wide">GLOBAL TRUST</strong><span className="text-[10px] tracking-[.22em] text-blue-100">ADMIN CONSOLE</span></span></Link><button onClick={signOut} className="text-sm font-bold text-emerald-300">Sign out</button></div></header><div className="mx-auto max-w-7xl p-6 sm:p-8"><p className="text-sm font-bold uppercase tracking-[.16em] text-emerald-600">Demo operations</p><h1 className="mt-2 text-3xl font-black text-[#071b3a]">Admin dashboard</h1><p className="mt-2 text-sm text-[#61708a]">Manage demo registrations and simulated balances. No real money is handled.</p>{message && <p className="mt-5 rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm text-[#0b5fff]">{message}</p>}<section className="mt-7 grid gap-5 md:grid-cols-3"><Stat label="Total demo users" value={String(users.length)} /><Stat label="Pending approvals" value={String(pending)} /><Stat label="Total demo balance" value={`$${total.toFixed(2)}`} /></section><section className="gtb-card mt-7 overflow-hidden"><div className="border-b border-[#e6ebf2] p-6"><h2 className="text-lg font-black text-[#071b3a]">Account management</h2><p className="mt-1 text-sm text-[#61708a]">Approve accounts, restrict access, block accounts, remove records, or add a simulated top-up.</p></div>{loading ? <p className="p-8 text-sm text-[#61708a]">Loading users…</p> : users.length === 0 ? <p className="p-8 text-sm text-[#61708a]">No demo account registrations yet.</p> : <div className="divide-y divide-[#e6ebf2]">{users.map(user => <article key={user.id} className="p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="font-bold text-[#10233f]">{user.fullName}</p><p className="mt-1 text-sm text-[#61708a]">{user.email} · NIN/SSN {user.ssnOrNin}</p><p className="mt-1 text-xs text-[#61708a]">Account: {user.accountNumber || 'Not assigned'} · Balance: ${user.balance.toFixed(2)}</p></div><span className={`gtb-badge ${user.status === 'ACTIVE' ? 'gtb-badge-green' : 'gtb-badge-blue'}`}>{user.status}</span></div><div className="mt-5 flex flex-wrap gap-2"><button onClick={() => action(user.id,'approve')} className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white">Approve</button><button onClick={() => action(user.id,'restrict')} className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-bold text-white">Restrict</button><button onClick={() => action(user.id,'block')} className="rounded-lg bg-red-600 px-3 py-2 text-xs font-bold text-white">Block</button><button onClick={() => action(user.id,'delete')} className="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-700">Delete</button><input value={amounts[user.id] || ''} onChange={e => setAmounts({...amounts,[user.id]:e.target.value})} className="w-28 rounded-lg border border-[#d6deea] px-3 py-2 text-xs" placeholder="Top-up $" type="number" min="0.01" step="0.01" /><button onClick={() => action(user.id,'topup')} className="rounded-lg bg-[#0b5fff] px-3 py-2 text-xs font-bold text-white">Top up</button></div></article>)}</div>}</section></div></main>;
 }
-
-function AdminTopNav() {
-  return (
-    <nav className="border-b border-gray-200 bg-white">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/admin" className="text-lg font-bold text-primary-900">
-          Admin – Online Banking
-        </Link>
-        <div className="flex items-center gap-4">
-          <Link href="/admin" className="text-sm text-gray-700 hover:text-primary-700">
-            Dashboard
-          </Link>
-          <Link href="/auth/signin" className="text-sm text-gray-700 hover:text-primary-700">
-            Sign out
-          </Link>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="p-5 rounded-xl border border-gray-200 bg-white shadow-sm">
-      <div className="text-sm text-gray-600 mb-1">{label}</div>
-      <div className="text-xl font-semibold text-primary-900">{value}</div>
-    </div>
-  );
-}
+function Stat({label,value}:{label:string;value:string}) { return <div className="gtb-card p-6"><p className="text-sm text-[#61708a]">{label}</p><p className="mt-2 text-3xl font-black text-[#071b3a]">{value}</p></div>; }
