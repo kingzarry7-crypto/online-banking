@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  RESTRICTED
+  BLOCKED
+}
+
+enum TransactionType {
+  TRANSFER_LOCAL
+  TRANSFER_WIRE
+  TOPUP
+  DEBIT
+  CREDIT
+}
+
+enum TransactionStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  fullName      String
+  address       String
+  ssnOrNin      String    @unique
+  role          Role      @default(USER)
+  status        UserStatus @default(PENDING)
+  profilePicUrl String?
+  accountNumber String?   @unique
+  balance       Decimal   @default(0) @db.Decimal(19,4)
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  transactions       Transaction[]
+  loanApplications   LoanApplication[]
+  investments        Investment[]
+}
+
+model Transaction {
+  id               String            @id @default(cuid())
+  userId           String
+  user             User              @relation(fields: [userId], references: [id])
+  type             TransactionType
+  amount           Decimal           @db.Decimal(19,4)
+  currency         String            @default("USD")
+  recipientName    String?
+  recipientAccount String?
+  recipientBank    String?
+  status           TransactionStatus @default(SUCCESS)
+  description      String?
+  createdAt        DateTime          @default(now())
+}
+
+model LoanApplication {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Decimal  @db.Decimal(19,4)
+  purpose   String
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt DateTime @default(now())
+}
+
+model Investment {
+  id          String  @id @default(cuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  symbol      String
+  units       Decimal @db.Decimal(19,4)
+  avgPrice    Decimal @db.Decimal(19,4)
+  currentValue Decimal @db.Decimal(19,4)
+}
